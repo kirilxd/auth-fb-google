@@ -6,7 +6,7 @@ export default (port: number) =>
     {
       clientID: "2577798969135720",
       clientSecret: "2b20f033ab905d9ffafa47d8de261e83",
-      callbackURL: `http://localhost:${port}/logged`,
+      callbackURL: `http://localhost:${port}/auth/facebook/callback`,
     },
     function (
       accessToken: string,
@@ -14,8 +14,6 @@ export default (port: number) =>
       profile: Profile,
       done: any
     ) {
-      return done(null, {
-        username: profile.username,
-      });
+      return done(null, profile);
     }
   );
