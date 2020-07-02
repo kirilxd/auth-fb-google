@@ -14,7 +14,13 @@ authInstance.deserializeUser((user, cb) => {
 app.use(
   session({ secret: "anything", resave: false, saveUninitialized: true })
 );
-
+interface RequestUser extends Request {
+  user: {
+    id: string;
+    displayName: string;
+    provider: string;
+  };
+}
 app.use(authInstance.initialize());
 app.use(authInstance.session());
 
@@ -22,20 +28,26 @@ app.use(express.static(__dirname + "/"));
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
-app.get("/logged", loginRequired,(req, res) => {
+app.get("/logged", loginRequired, (req: RequestUser, res: any) => {
   res.sendFile(__dirname + "/logged.html");
 });
 
 app.get("/auth/facebook", authInstance.authenticate("facebook"));
-app.get("/auth/google", (_, res) => res.sendStatus(418));
+app.get(
+  "/auth/google",
+  authInstance.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/plus.login"],
+  })
+);
 
-// app.get(
-//   "/auth/google",
-//   passport.authenticate("google", {
-//     scope: ["https://www.googleapis.com/auth/plus.login"],
-//   })
-// );
-
+app.get(
+  "/auth/google/callback",
+  authInstance.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/plus.login"],
+    successRedirect: "/logged",
+    failureRedirect: "/",
+  })
+);
 app.get(
   "/auth/facebook/callback",
   authInstance.authenticate("facebook", {
@@ -43,17 +55,18 @@ app.get(
     failureRedirect: "/",
   })
 );
-function loginRequired(req: any, res: any, next: any) {
-    if (!req.user) return res.send("LOG IN!");
-    return next();
+function loginRequired(req: RequestUser, res: any, next: any) {
+  if (!req.user) return res.redirect("/");
+  return next();
 }
-app.get("/logged/info", (req, res) => {
-  res.send(req.user);
+app.get("/logged/info", (req: RequestUser, res: any) => {
+  let resString = `Users id ${req.user.id} Users name ${req.user.displayName}, provider: ${req.user.provider}`;
+  res.send(resString);
 });
-app.get("/logout", (req,res)=>{
-    req.logOut();
-    res.redirect("/");
-})
+app.get("/logout", (req, res) => {
+  req.logOut();
+  res.redirect("/");
+});
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });

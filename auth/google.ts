@@ -6,7 +6,7 @@ export default (port: number) => new OAuth2Strategy(
         clientID:
             "771848358350-6an1o94eg9999bsqqoi12ekvkmgdn849.apps.googleusercontent.com",
         clientSecret: "sWgiGnFITQmPKKDzud2Rgow4",
-        callbackURL: `http://localhost:${port}/logged`,
+        callbackURL: `http://localhost:${port}/auth/google/callback`,
     },
     function (
         accessToken: any,
@@ -14,8 +14,6 @@ export default (port: number) => new OAuth2Strategy(
         profile: Profile,
         done: any
     ) {
-        return done(null, {
-            username: profile.username
-        });
+        return done(null, profile);
     }
 );
