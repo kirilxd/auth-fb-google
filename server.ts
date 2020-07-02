@@ -22,7 +22,7 @@ app.use(express.static(__dirname + "/"));
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
-app.get("/logged", (req, res) => {
+app.get("/logged", loginRequired,(req, res) => {
   res.sendFile(__dirname + "/logged.html");
 });
 
@@ -43,9 +43,17 @@ app.get(
     failureRedirect: "/",
   })
 );
+function loginRequired(req: any, res: any, next: any) {
+    if (!req.user) return res.send("LOG IN!");
+    return next();
+}
 app.get("/logged/info", (req, res) => {
   res.send(req.user);
 });
+app.get("/logout", (req,res)=>{
+    req.logOut();
+    res.redirect("/");
+})
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
