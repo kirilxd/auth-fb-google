@@ -5,6 +5,10 @@ fetch("https://official-joke-api.appspot.com/random_joke")
     document.querySelector("#setup").innerHTML = data.setup;
     document.querySelector("#punchline").innerHTML = data.punchline;
     document.querySelector("#button").addEventListener("click", () => {
-      document.querySelector("#punchline").style.display = "block";
+      if (document.querySelector("#punchline").style.display === "none") {
+        document.querySelector("#punchline").style.display = "block";
+      } else {
+        document.querySelector("#punchline").style.display = "none";
+      }
     });
   });
