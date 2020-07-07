@@ -39,7 +39,7 @@ export default function user(
       res.redirect("/logged");
     }
   );
-  app.get("/logged/info", (req: RequestUser, res: any) => {
+  app.get("/logged/info", loginRequired, (req: RequestUser, res: any) => {
     res.send(req.user);
   });
   app.get("/logout", (req, res) => {

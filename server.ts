@@ -11,7 +11,12 @@ const port = 8080;
 const authInstance = auth(port);
 serialize(authInstance);
 app.use(
-  session({ secret: "anything", resave: false, saveUninitialized: true })
+  session({
+    secret: "anything",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 6000 },
+  })
 );
 app.use(express.urlencoded({ extended: false }));
 
