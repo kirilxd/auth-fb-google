@@ -20,34 +20,6 @@ app.use(authInstance.session());
 
 app.use(express.static(__dirname + "/views"));
 user(app, authInstance);
-passport.use(
-  new OAuth2Strategy(
-    {
-      authorizationURL: "https://id.gov.ua",
-      tokenURL: `https://id.gov.ua/`,
-      clientID: "1",
-      clientSecret: "x",
-      callbackURL: `http://localhost:${port}/auth/euid/callback`,
-    },
-    function (
-      accessToken: any,
-      refreshToken: any,
-      profile: any,
-      done: any
-    ) {
-      return done(null, profile);
-    }
-  )
-);
-app.get("/auth/euid", passport.authenticate("oauth2"));
-
-app.get(
-  "/auth/euid/callback",
-  passport.authenticate("oauth2", { failureRedirect: "/" }),
-  function (req, res) {
-    res.redirect("/logged");
-  }
-);
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);

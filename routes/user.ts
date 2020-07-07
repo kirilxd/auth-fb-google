@@ -1,7 +1,11 @@
 import express from "express";
 import { loginRequired, RequestUser } from "../auth/helpers";
 import path from "path";
-export default function user(app: express.Application, authInstance: any) {
+import passport from "passport";
+export default function user(
+  app: express.Application,
+  authInstance: passport.PassportStatic
+) {
   app.get("/auth/facebook", authInstance.authenticate("facebook"));
   app.get(
     "/auth/google",
@@ -9,7 +13,10 @@ export default function user(app: express.Application, authInstance: any) {
       scope: ["https://www.googleapis.com/auth/plus.login"],
     })
   );
-
+  app.get(
+    "/auth/euid",
+    passport.authenticate("oauth2", { scope: ["email", "givenname"] })
+  );
   app.get(
     "/auth/google/callback",
     authInstance.authenticate("google", {
@@ -25,10 +32,15 @@ export default function user(app: express.Application, authInstance: any) {
       failureRedirect: "/",
     })
   );
-
+  app.get(
+    "/auth/euid/callback",
+    passport.authenticate("oauth2", { failureRedirect: "/" }),
+    function (req, res) {
+      res.redirect("/logged");
+    }
+  );
   app.get("/logged/info", (req: RequestUser, res: any) => {
-    let resString = `Users id ${req.user.id} Users name ${req.user.displayName}, provider: ${req.user.provider}`;
-    res.send(resString);
+    res.send(req.user);
   });
   app.get("/logout", (req, res) => {
     req.logOut();
