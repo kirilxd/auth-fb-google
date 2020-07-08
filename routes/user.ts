@@ -41,8 +41,8 @@ export default function user(
   );
   app.get(
     "/logged/info",
-    checkAccessToken,
     loginRequired,
+    checkAccessToken,
     (req: RequestUser, res: any) => {
       res.send(req.user);
     }
@@ -56,8 +56,8 @@ export default function user(
   });
   app.get(
     "/logged",
-    checkAccessToken,
     loginRequired,
+    checkAccessToken,
     (req: RequestUser, res: any) => {
       res.sendFile(path.join(__dirname, "../views", "logged.html"));
     }

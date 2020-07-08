@@ -8,9 +8,9 @@ export function checkAccessToken(req: RequestUser, res: any, next: any) {
   const currentDate = Date.now() / 1000;
   if (currentDate > req.user.expiresIn) {
     req.logout();
-    res.redirect("/");
+    return res.redirect("/");
   } else {
-    next();
+    return next();
   }
 }
 export interface RequestUser extends Request {
