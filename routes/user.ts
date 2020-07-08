@@ -1,5 +1,5 @@
 import express from "express";
-import { loginRequired, RequestUser } from "../auth/helpers";
+import { loginRequired, RequestUser, checkAccessToken } from "../auth/helpers";
 import path from "path";
 import passport from "passport";
 export default function user(
@@ -39,9 +39,14 @@ export default function user(
       res.redirect("/logged");
     }
   );
-  app.get("/logged/info", loginRequired, (req: RequestUser, res: any) => {
-    res.send(req.user);
-  });
+  app.get(
+    "/logged/info",
+    checkAccessToken,
+    loginRequired,
+    (req: RequestUser, res: any) => {
+      res.send(req.user);
+    }
+  );
   app.get("/logout", (req, res) => {
     req.logOut();
     res.redirect("/");
@@ -49,7 +54,12 @@ export default function user(
   app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../views", "index.html"));
   });
-  app.get("/logged", loginRequired, (req: RequestUser, res: any) => {
-    res.sendFile(path.join(__dirname, "../views", "logged.html"));
-  });
+  app.get(
+    "/logged",
+    checkAccessToken,
+    loginRequired,
+    (req: RequestUser, res: any) => {
+      res.sendFile(path.join(__dirname, "../views", "logged.html"));
+    }
+  );
 }

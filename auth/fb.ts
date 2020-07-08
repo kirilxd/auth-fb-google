@@ -4,8 +4,8 @@ import { Profile } from "passport";
 export default (port: number) =>
   new Strategy(
     {
-      clientID: "2577798969135720",
-      clientSecret: "2b20f033ab905d9ffafa47d8de261e83",
+      clientID: process.env.FB_CLIENT_ID!,
+      clientSecret: process.env.FB_CLIENT_SECRET!,
       callbackURL: `http://localhost:${port}/auth/facebook/callback`,
     },
     function (

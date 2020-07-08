@@ -5,8 +5,8 @@ export default (port: number) =>
     {
       authorizationURL: "https://id.gov.ua",
       tokenURL: `https://id.gov.ua/get-access-token`,
-      clientID: "e339226d762f7637d4d7ea82f85f5334",
-      clientSecret: "c0512dde750b92f505a43ea8c2bb0575d4ab9734",
+      clientID: process.env.IDGOVUA_CLIENT_ID!,
+      clientSecret: process.env.IDGOVUA_CLIENT_SECRET!,
       callbackURL: `http://localhost:${port}/auth/euid/callback`,
       passReqToCallback: true,
     },
@@ -22,6 +22,7 @@ export default (port: number) =>
         `https://id.gov.ua/get-user-info?access_token=${accessToken}&user_id=${results.user_id}&fields=issuer,issuercn,serial,subject,subjectcn,locality,state, title,lastname, middlename,givenname`
       );
       let data = await res.json();
-      return done(null, data);
+      data.expiresIn = results.expires_in;
+      return done(null, data, results);
     }
   );
