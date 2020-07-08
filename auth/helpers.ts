@@ -7,8 +7,9 @@ export function loginRequired(req: RequestUser, res: any, next: any) {
 export function checkAccessToken(req: RequestUser, res: any, next: any) {
   const currentDate = Date.now() / 1000;
   if (currentDate > req.user.expiresIn) {
-    req.logout();
-    return res.redirect("/");
+    req.session.destroy((error: any) => {
+      res.redirect("/");
+    });
   } else {
     return next();
   }
@@ -20,5 +21,7 @@ export interface RequestUser extends Request {
     provider: string;
     expiresIn: number;
   };
-  logout: () => void;
+  session: {
+    destroy: (x: any) => () => void;
+  };
 }

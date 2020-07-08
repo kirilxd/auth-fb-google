@@ -36,6 +36,8 @@ export default function user(
     "/auth/euid/callback",
     passport.authenticate("oauth2", { failureRedirect: "/" }),
     function (req, res) {
+      // // @ts-ignore
+      // req.session.cookie.maxAge = req.authInfo.expires_in * 1000 - Date.now();
       res.redirect("/logged");
     }
   );
@@ -48,7 +50,7 @@ export default function user(
     }
   );
   app.get("/logout", (req, res) => {
-    req.logOut();
+    req.logout();
     res.redirect("/");
   });
   app.get("/", (req, res) => {
