@@ -1,4 +1,5 @@
-import OAuth2Strategy from "passport-oauth2";
+import OAuth2Strategy, {VerifyCallback} from "passport-oauth2";
+import {Request} from "express"
 import fetch from "node-fetch";
 export default (port: number) =>
   new OAuth2Strategy(
@@ -11,12 +12,12 @@ export default (port: number) =>
       passReqToCallback: true,
     },
     async function (
-      req: any,
-      accessToken: any,
-      refreshToken: any,
+      req: Request,
+      accessToken: string,
+      refreshToken: string,
       results: any,
       profile: any,
-      done: any
+      done: VerifyCallback
     ) {
       const res = await fetch(
         `https://id.gov.ua/get-user-info?access_token=${accessToken}&user_id=${results.user_id}&fields=issuer,issuercn,serial,subject,subjectcn,locality,state, title,lastname, middlename,givenname`

@@ -2,13 +2,15 @@ fetch("https://official-joke-api.appspot.com/random_joke")
   .then((data) => data.json())
   .then((data) => {
     let index = Math.floor(Math.random() * (data.length - 1));
-    document.querySelector("#setup").innerHTML = data.setup;
-    document.querySelector("#punchline").innerHTML = data.punchline;
+    let setupElement = document.querySelector("#setup");
+    let punchlineElement = document.querySelector("#punchline");
+    setupElement.innerHTML = data.setup;
+    punchlineElement.innerHTML = data.punchline;
     document.querySelector("#button").addEventListener("click", () => {
-      if (document.querySelector("#punchline").style.display === "none") {
-        document.querySelector("#punchline").style.display = "block";
+      if (punchlineElement.style.display === "none") {
+        punchlineElement.style.display = "block";
       } else {
-        document.querySelector("#punchline").style.display = "none";
+        punchlineElement.style.display = "none";
       }
     });
   });

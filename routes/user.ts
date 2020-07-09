@@ -50,6 +50,7 @@ export default function user(
     }
   );
   app.get("/logout", (req, res) => {
+    // @ts-ignore
     req.logout();
     res.redirect("/");
   });

@@ -1,4 +1,4 @@
-import { Strategy } from "passport-facebook";
+import { Strategy, VerifyFunction } from "passport-facebook";
 import { Profile } from "passport";
 
 export default (port: number) =>

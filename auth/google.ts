@@ -1,4 +1,4 @@
-import { OAuth2Strategy } from "passport-google-oauth";
+import { OAuth2Strategy, VerifyFunction } from "passport-google-oauth";
 import { Profile } from "passport";
 
 export default (port: number) =>
@@ -9,10 +9,10 @@ export default (port: number) =>
       callbackURL: `http://localhost:${port}/auth/google/callback`,
     },
     function (
-      accessToken: any,
-      refreshToken: any,
+      accessToken: string,
+      refreshToken: string,
       profile: Profile,
-      done: any
+      done: VerifyFunction
     ) {
       return done(null, profile);
     }
